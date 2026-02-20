@@ -1,13 +1,25 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState, useEffect } from "react";
+import LoaderScreen from "@/components/LoaderScreen";
+import HeroSection from "@/components/HeroSection";
 
 const Index = () => {
+  const [loading, setLoading] = useState(true);
+  const [exiting, setExiting] = useState(false);
+
+  useEffect(() => {
+    const exitTimer = setTimeout(() => setExiting(true), 3000);
+    const removeTimer = setTimeout(() => setLoading(false), 3600);
+    return () => {
+      clearTimeout(exitTimer);
+      clearTimeout(removeTimer);
+    };
+  }, []);
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
-    </div>
+    <>
+      {loading && <LoaderScreen isExiting={exiting} />}
+      {!loading && <HeroSection />}
+    </>
   );
 };
 

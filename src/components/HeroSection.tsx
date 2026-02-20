@@ -22,7 +22,7 @@ const HeroSection = () => {
             GRAMIN_INTEL
           </span>
         </div>
-        <Button variant="outline" size="sm" className="hidden sm:flex" onClick={() => navigate("/dashboard")}>
+        <Button variant="outline" size="sm" className="hidden sm:flex" onClick={() => navigate("/auth")}>
           Get Started <ArrowRight className="w-4 h-4 ml-1" />
         </Button>
       </nav>
@@ -42,7 +42,7 @@ const HeroSection = () => {
           Data-driven insights for crop planning, market prices, and weather — designed for the hands that feed the nation.
         </p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
-          <Button size="lg" className="text-base" onClick={() => navigate("/dashboard")}>
+          <Button size="lg" className="text-base" onClick={() => navigate("/auth")}>
             Explore Dashboard <ArrowRight className="w-4 h-4 ml-2" />
           </Button>
           <Button variant="outline" size="lg" className="text-base">

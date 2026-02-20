@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Leaf,
   CloudSun,
@@ -8,11 +9,12 @@ import {
   User,
   Thermometer,
   CloudRain,
-  
   ArrowRight,
 } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import AccessibilityBar from "@/components/AccessibilityBar";
+import { useAccessibility } from "@/contexts/AccessibilityContext";
 
 interface DashboardCard {
   id: string;
@@ -107,17 +109,35 @@ const cards: DashboardCard[] = [
 
 const Dashboard = () => {
   const [expanded, setExpanded] = useState<string | null>(null);
+  const navigate = useNavigate();
+  const { speakText, isReadAloudEnabled } = useAccessibility();
+
+  useEffect(() => {
+    if (isReadAloudEnabled) {
+      speakText("Dashboard page. Welcome Rajesh Kumar");
+    }
+  }, []);
+
+  const handleCardClick = (card: DashboardCard) => {
+    setExpanded(expanded === card.id ? null : card.id);
+    if (isReadAloudEnabled) {
+      speakText(`${card.title}. ${card.summary}`);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
       <header className="bg-primary text-primary-foreground">
         <div className="max-w-6xl mx-auto flex items-center justify-between px-6 py-4">
           <div className="flex items-center gap-2">
             <Leaf className="w-6 h-6 text-accent" />
             <span className="font-mono font-bold text-lg tracking-wider">GRAMIN_INTEL</span>
           </div>
-          <div className="flex items-center gap-3">
+          <div
+            className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity"
+            onClick={() => navigate("/profile")}
+            onMouseEnter={() => isReadAloudEnabled && speakText("View profile. Click to open")}
+          >
             <Avatar className="h-9 w-9 border-2 border-accent">
               <AvatarFallback className="bg-primary text-accent font-bold text-sm">
                 <User className="w-4 h-4" />
@@ -131,6 +151,8 @@ const Dashboard = () => {
         </div>
       </header>
 
+      <AccessibilityBar />
+
       {/* Dashboard Content */}
       <main className="max-w-6xl mx-auto px-6 py-10">
         <h2 className="text-2xl font-bold text-foreground mb-2">Your Dashboard</h2>
@@ -142,7 +164,8 @@ const Dashboard = () => {
             return (
               <div
                 key={card.id}
-                onClick={() => setExpanded(isExpanded ? null : card.id)}
+                onClick={() => handleCardClick(card)}
+                onMouseEnter={() => isReadAloudEnabled && speakText(`${card.title}. ${card.summary}`)}
                 className={`
                   relative cursor-pointer rounded-xl border border-border
                   bg-card/60 backdrop-blur-sm p-6
